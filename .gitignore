@@ -1,0 +1,51 @@
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# ML artifacts and datasets (review intentionally before tracking)
+ml/training/data/raw/*
+!ml/training/data/raw/.gitkeep
+ml/training/data/processed/*
+!ml/training/data/processed/.gitkeep
+ml/training/data/external/*
+!ml/training/data/external/.gitkeep
+ml/inference/artifacts/*
+!ml/inference/artifacts/.gitkeep
+ml/training/experiments/*
+!ml/training/experiments/.gitkeep
+*.joblib
+*.pkl
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+dist/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Java / Spring / Maven / Gradle
+target/
+build/
+.gradle/
+*.class
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

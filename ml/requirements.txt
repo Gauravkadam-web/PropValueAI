@@ -1,0 +1,2 @@
+# ML shared dependencies placeholder
+# Dependencies will be defined and pinned with tested versions during the relevant implementation phase.
