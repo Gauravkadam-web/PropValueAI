@@ -23,9 +23,12 @@ ml/training/data/external/*
 !ml/training/data/external/.gitkeep
 ml/inference/artifacts/*
 !ml/inference/artifacts/.gitkeep
+!ml/inference/artifacts/metadata.json
+!ml/inference/artifacts/model.joblib
 ml/training/experiments/*
 !ml/training/experiments/.gitkeep
 *.joblib
+!ml/inference/artifacts/model.joblib
 *.pkl
 
 # Node / Next.js

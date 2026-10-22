@@ -68,6 +68,85 @@ ml/
   - **Test $R^2$:** 0.6365
 - **Dataset Scope:** Educational demonstration based on CC0 benchmark data with mapped Pune localities. Predictions represent simulated estimates.
 
+## Fresh-Clone Setup Guide
+
+### Option A — Run the Existing Model (Recommended for API & Backend Development)
+If you only need to run the FastAPI inference service, you do **not** need to download the raw training dataset because the fitted artifact (`model.joblib`) and metadata (`metadata.json`) are committed to Git in `ml/inference/artifacts/`.
+
+1. **Clone repository:**
+   ```powershell
+   git clone https://github.com/Gauravkadam-web/PropValueAI.git
+   cd PropValueAI
+   ```
+2. **Create and activate virtual environment:**
+   ```powershell
+   python -m venv .venv
+   .\.venv\Scripts\Activate.ps1
+   ```
+3. **Install inference dependencies:**
+   ```powershell
+   pip install -r ml/inference/requirements.txt
+   ```
+4. **Confirm committed artifacts exist:**
+   ```powershell
+   Test-Path ml/inference/artifacts/model.joblib
+   Test-Path ml/inference/artifacts/metadata.json
+   ```
+5. **Start the FastAPI inference service:**
+   ```powershell
+   uvicorn ml.inference.app.main:app --host 127.0.0.1 --port 8000 --reload
+   ```
+6. **Verify health & readiness:**
+   ```powershell
+   Invoke-RestMethod -Uri "http://127.0.0.1:8000/health/live" -Method Get
+   Invoke-RestMethod -Uri "http://127.0.0.1:8000/health/ready" -Method Get
+   ```
+7. **Test a sample prediction:**
+   ```powershell
+   $body = @{
+       total_sqft = 1056.0
+       size = "2 BHK"
+       bath = 2.0
+       balcony = 1.0
+       area_type = "Super built-up  Area"
+   } | ConvertTo-Json
+
+   Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/v1/predict" -Method Post -Body $body -ContentType "application/json"
+   ```
+
+---
+
+### Option B — Regenerate the Model Artifacts (For ML Experimentation & Training)
+The raw training dataset is ignored by Git to preserve repository hygiene. If you want to re-run EDA, train alternative estimators, or re-export artifacts:
+
+1. **Obtain the dataset:**
+   Acquire `Pune_House_Data.csv` from the approved educational source or project owner.
+2. **Place raw dataset at the verified location:**
+   Copy the CSV into:
+   ```text
+   ml/training/data/raw/Pune_House_Data.csv
+   ```
+3. **Install training dependencies:**
+   ```powershell
+   pip install -r ml/training/requirements.txt
+   ```
+4. **Execute training and export pipeline:**
+   ```powershell
+   python ml/training/scripts/train.py
+   ```
+   This will execute 80/20 splitting, 5-fold cross-validation, refit the winning Random Forest pipeline, and regenerate both `ml/inference/artifacts/model.joblib` and `ml/inference/artifacts/metadata.json`.
+5. **Verify newly generated artifacts:**
+   ```powershell
+   python ml/training/scripts/evaluate.py --model-path ml/inference/artifacts/model.joblib --data-path ml/training/data/raw/Pune_House_Data.csv
+   ```
+
+> [!NOTE]
+> **Educational Demonstration Disclaimer:**
+> The dataset is derived from the benchmark CC0 real-estate dataset with synthetically substituted Pune locality labels.
+> *"PropValueAI provides simulated estimates for educational demonstration purposes only. Predictions are not actual Pune market valuations."*
+
+---
+
 ## Running Tests
 
 From project root:

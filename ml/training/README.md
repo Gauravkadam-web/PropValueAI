@@ -22,6 +22,17 @@ ml/training/
 └── README.md            # Submodule documentation
 ```
 
+## Raw Dataset Placement (Required for Training Only)
+
+The raw dataset `Pune_House_Data.csv` is excluded from Git to preserve repository hygiene. 
+Before running training or EDA scripts on a fresh clone:
+1. Obtain `Pune_House_Data.csv` from the approved educational source or project owner.
+2. Place it into:
+   ```text
+   ml/training/data/raw/Pune_House_Data.csv
+   ```
+*(Note: If you only wish to run the FastAPI inference service, this dataset is NOT required because the trained model artifact is committed to Git).*
+
 ## Available Scripts and Commands
 
 All commands should be executed from the project root using the activated virtual environment (`.\.venv\Scripts\python`):

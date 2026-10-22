@@ -106,7 +106,7 @@ These are **unverified candidates**, not yet approved training inputs. Inspect t
 
 ## Current status
 
-Phase 0 documentation and folder structure are being prepared. No application features, database migrations, trained model, inference endpoint, or frontend/backend implementation should be assumed complete.
+Phase 0, Phase 1, Phase 2, and Phase 3 are complete. The Python FastAPI ML inference service is fully functional and ready to be queried by the Spring Boot backend in Phase 4. For fresh-clone setup instructions (running existing model vs regenerating artifacts), see [`ml/README.md`](ml/README.md).
 
 ## Security and repository hygiene
 

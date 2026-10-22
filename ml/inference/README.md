@@ -175,12 +175,13 @@ Returns architectural metadata, evaluation metrics, and limitations.
 
 ---
 
-## 5. Local Development Commands (Windows PowerShell)
+## 5. Local Setup & Execution Guide (Windows PowerShell)
 
-No Docker or external databases required.
+No Docker or external databases required. Because `model.joblib` and `metadata.json` are committed to Git in `ml/inference/artifacts/`, a fresh clone can run inference immediately without downloading or preprocessing the raw training dataset.
 
 ### 1. Activate Virtual Environment
 ```powershell
+python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 ```
 

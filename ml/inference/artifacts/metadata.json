@@ -1,0 +1,110 @@
+{
+  "project": "PropValueAI",
+  "phase": "Phase 2 \u2014 ML Training & Evaluation",
+  "model_name": "Random Forest",
+  "model_class": "sklearn.ensemble.RandomForestRegressor",
+  "target_variable": "price",
+  "target_unit": "Lakhs INR",
+  "feature_schema": {
+    "input_features": [
+      "total_sqft",
+      "size",
+      "bath",
+      "balcony",
+      "area_type"
+    ],
+    "engineered_features": [
+      "total_sqft",
+      "bhk",
+      "bath",
+      "balcony",
+      "area_type"
+    ],
+    "dropped_features": [
+      "society",
+      "site_location",
+      "availability"
+    ]
+  },
+  "preprocessing": {
+    "total_sqft": "Cleaned float; range midpoint parsing; unit normalization to sqft",
+    "bhk": "Integer regex extraction from size string",
+    "bath": "Median imputation",
+    "balcony": "Median imputation",
+    "area_type": "Most-frequent imputation followed by OneHotEncoder(handle_unknown='ignore')"
+  },
+  "training_data": {
+    "total_raw_rows": 13320,
+    "train_test_split_ratio": "80%/20%",
+    "random_seed": 42,
+    "initial_train_rows": 10656,
+    "final_train_rows": 10015,
+    "test_rows": 2508
+  },
+  "evaluation_metrics": {
+    "cv_mae_lakhs": 34.97,
+    "cv_mae_std": 2.61,
+    "cv_rmse_lakhs": 88.39,
+    "cv_rmse_std": 8.67,
+    "cv_r2_mean": 0.6085,
+    "cv_r2_std": 0.028,
+    "test_mae_lakhs": 33.26,
+    "test_rmse_lakhs": 88.74,
+    "test_r2": 0.6365
+  },
+  "candidate_comparison": [
+    {
+      "model": "DummyRegressor (Median)",
+      "cv_mae": 62.02,
+      "cv_rmse": 147.46,
+      "cv_r2": -0.0823,
+      "test_mae": 60.8,
+      "test_rmse": 152.12,
+      "test_r2": -0.0682
+    },
+    {
+      "model": "Linear Regression",
+      "cv_mae": 41.71,
+      "cv_rmse": 102.88,
+      "cv_r2": 0.4764,
+      "test_mae": 39.5,
+      "test_rmse": 96.37,
+      "test_r2": 0.5713
+    },
+    {
+      "model": "Decision Tree",
+      "cv_mae": 36.55,
+      "cv_rmse": 93.48,
+      "cv_r2": 0.5645,
+      "test_mae": 34.7,
+      "test_rmse": 90.7,
+      "test_r2": 0.6202
+    },
+    {
+      "model": "Random Forest",
+      "cv_mae": 34.97,
+      "cv_rmse": 88.39,
+      "cv_r2": 0.6085,
+      "test_mae": 33.26,
+      "test_rmse": 88.74,
+      "test_r2": 0.6365
+    },
+    {
+      "model": "K-Nearest Neighbors",
+      "cv_mae": 37.41,
+      "cv_rmse": 94.27,
+      "cv_r2": 0.5536,
+      "test_mae": 35.54,
+      "test_rmse": 87.82,
+      "test_r2": 0.644
+    }
+  ],
+  "environment": {
+    "python": "3.12.10",
+    "scikit_learn": "1.9.1",
+    "pandas": "3.0.6",
+    "numpy": "2.5.4",
+    "joblib": "1.6.0"
+  },
+  "limitations": "Educational demonstration only. The underlying data is derived from the CC0 Bengaluru benchmark dataset with synthetically mapped Pune localities. The model does not predict certified or actual real-world cadastral valuations in Pune."
+}
