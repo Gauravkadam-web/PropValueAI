@@ -1,0 +1,53 @@
+server:
+  port: ${SERVER_PORT:8080}
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: never
+    include-exception: false
+
+spring:
+  application:
+    name: propvalueai-backend
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/propvalueai_db}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+propvalueai:
+  jwt:
+    secret: ${PROPVALUEAI_JWT_SECRET:c3VwZXJfc2VjcmV0X2p3dF9rZXlfYXJiaXRyYXJ5XzI1Nl9iaXRfa2V5X2Zvcg==}
+    expiration-ms: ${PROPVALUEAI_JWT_EXPIRATION:${PROPVALUEAI_JWT_EXPIRATION_MS:86400000}}
+  fastapi:
+    base-url: ${PROPVALUEAI_FASTAPI_BASE_URL:http://127.0.0.1:8000}
+    connect-timeout-ms: ${PROPVALUEAI_FASTAPI_CONNECT_TIMEOUT_MS:3000}
+    read-timeout-ms: ${PROPVALUEAI_FASTAPI_READ_TIMEOUT_MS:5000}
+  admin:
+    email: ${PROPVALUEAI_ADMIN_EMAIL:}
+    password: ${PROPVALUEAI_ADMIN_PASSWORD:}
+    first-name: ${PROPVALUEAI_ADMIN_FIRST_NAME:Admin}
+    last-name: ${PROPVALUEAI_ADMIN_LAST_NAME:User}
+  cors:
+    allowed-origins: ${PROPVALUEAI_CORS_ALLOWED_ORIGINS:http://localhost:3000,http://127.0.0.1:3000}
+
+# Springdoc OpenAPI Swagger UI
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui/index.html
+    operations-sorter: method
+    tags-sorter: alpha

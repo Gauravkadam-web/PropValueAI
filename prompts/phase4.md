@@ -251,7 +251,7 @@ CREATE INDEX idx_users_email ON users(email);
 
 CREATE TABLE IF NOT EXISTS prediction_records (
     id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT REFERENCES users(id) ON DELETE SET NULL,
+    user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     total_sqft_input VARCHAR(100) NOT NULL,
     size_input VARCHAR(50),
     bath_input DOUBLE PRECISION,
@@ -277,7 +277,7 @@ CREATE INDEX idx_predictions_created_at ON prediction_records(created_at DESC);
    - Fields: `id`, `email`, `passwordHash`, `firstName`, `lastName`, `role` (`Role.ROLE_USER`, `Role.ROLE_ADMIN`), `createdAt`, `updatedAt`.
 2. **`PredictionRecordEntity`:**
    - Mapped to table `prediction_records`.
-   - Fields: `id`, `user` (`@ManyToOne` nullable to support guest/demo predictions if allowed, or authenticated user), inputs (`totalSqftInput`, `sizeInput`, `bathInput`, `balconyInput`, `areaTypeInput`), outputs (`predictedPriceLakhs`, `targetUnit`, `modelName`, `modelVersion`, `fastapiPredictionId`, `disclaimer`, `status`, `createdAt`).
+   - Fields: `id`, `user` (`@ManyToOne` non-null, strictly associated with the authenticated user; guest predictions prohibited), inputs (`totalSqftInput`, `sizeInput`, `bathInput`, `balconyInput`, `areaTypeInput`), outputs (`predictedPriceLakhs`, `targetUnit`, `modelName`, `modelVersion`, `fastapiPredictionId`, `disclaimer`, `status`, `createdAt`).
 
 ---
 
@@ -470,10 +470,8 @@ All configurations are driven by environment variables with fallback defaults fo
 
 1. **Local Database Instance:**
    - *Assumption:* A local PostgreSQL instance is running on port 5432. The database `propvalueai_db` must be created by the user or initial setup script.
-2. **Anonymous vs Authenticated Predictions:**
-   - *Design Decision:* Both options can be supported cleanly:
-     - If authenticated, the user ID is attached to the record and appears in `/api/v1/predictions` history.
-     - If unauthenticated, the prediction succeeds with `user_id = NULL` (enabling guest property estimates without forcing login), but history tracking requires an account.
+2. **Anonymous vs Authenticated Predictions (Final Decision):**
+   - *Final Approved Decision:* Authentication is mandatory for every prediction request. Guest/anonymous predictions are strictly prohibited. Every persisted prediction belongs to an authenticated user (`user_id NOT NULL`), and unauthenticated requests are rejected with HTTP 401 Unauthorized.
 3. **Mandatory Educational Disclaimer:**
    - Verified that the exact disclaimer string:
      `"PropValueAI provides simulated estimates for educational demonstration purposes only. Predictions are not actual Pune market valuations."`

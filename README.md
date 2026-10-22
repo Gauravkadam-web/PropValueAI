@@ -1,6 +1,6 @@
 # Real Estate Price Prediction Using Python and Machine Learning
 
-**Project status:** Planning / Phase 0  
+**Project status:** Phase 4 Implemented (Spring Boot Backend); Phase 5 (Frontend) Next.
 **Purpose:** Estimate residential property prices from verified historical property data using a trained machine-learning model.
 
 ## Overview
@@ -106,7 +106,7 @@ These are **unverified candidates**, not yet approved training inputs. Inspect t
 
 ## Current status
 
-Phase 0, Phase 1, Phase 2, and Phase 3 are complete. The Python FastAPI ML inference service is fully functional and ready to be queried by the Spring Boot backend in Phase 4. For fresh-clone setup instructions (running existing model vs regenerating artifacts), see [`ml/README.md`](ml/README.md).
+Phase 0, Phase 1, Phase 2, Phase 3, and Phase 4 are complete. The Spring Boot backend service is fully implemented with PostgreSQL Flyway migrations, stateless JWT authentication, internal FastAPI ML integration, and prediction history tracking. For backend setup, see [`backend/README.md`](backend/README.md). For ML inference setup, see [`ml/README.md`](ml/README.md).
 
 ## Security and repository hygiene
 

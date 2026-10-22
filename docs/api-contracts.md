@@ -1,13 +1,13 @@
 # API Contracts — PropValueAI
 
-**Status:** Phase 3 Implemented (FastAPI Inference Service); Spring Boot & Frontend API Contracts in design.
+**Status:** Phase 4 Implemented (Spring Boot Backend & FastAPI Inference Service); Frontend API Contracts in design.
 
 ---
 
 ## 1. Service Boundaries
 
 ### Browser → Spring Boot
-The Next.js browser client communicates with Spring Boot application APIs (`/api/properties`, `/api/predictions`, `/api/auth`). It must not access PostgreSQL directly or call the internal FastAPI service directly.
+The Next.js browser client communicates with Spring Boot application APIs (`/api/v1/predictions`, `/api/v1/auth`, `/api/v1/health`, `/api/v1/admin/predictions`). It must not access PostgreSQL directly or call the internal FastAPI service directly.
 
 ### Spring Boot → FastAPI
 Spring Boot calls the internal FastAPI inference service using server-to-server HTTP POST requests. The request must match the feature contract established by the fitted scikit-learn pipeline.
