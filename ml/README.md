@@ -1,13 +1,13 @@
 # ML Module
 
-**Status:** Phase 2 complete. Offline EDA, preprocessing pipeline, model training, cross-validation, and pipeline artifact export are complete. Inference service (Phase 3) is pending.
+**Status:** Phase 3 Complete — FastAPI ML Inference Service implemented and verified.
 
 ## Responsibilities
 - `training/`: offline dataset inspection, EDA, training, evaluation, and experiment records.
-- `inference/`: holds exported artifacts (`model.joblib`, `metadata.json`); Phase 3 will implement FastAPI inference.
+- `inference/`: production-ready FastAPI inference service exposing health checks, model metadata, and single/batch property price prediction endpoints.
 - `pipeline/`: optional orchestration modules if needed in future phases.
 - `common/`: shared utilities, unit conversion factors, constants, and custom scikit-learn transformers.
-- `tests/`: unit and integration tests for preprocessing, training reproducibility, and artifact loading.
+- `tests/`: unit and integration tests for preprocessing, training reproducibility, artifact loading, and FastAPI inference API.
 
 ## Current Repository Structure
 
@@ -29,14 +29,18 @@ ml/
 │   ├── requirements.txt         # Training dependencies
 │   └── README.md                # Training documentation
 ├── inference/
-│   ├── model/                   # Planned inference loaders/predictors (Phase 3)
-│   ├── preprocessing/           # Planned inference preprocessing (Phase 3)
-│   ├── services/                # Planned prediction service (Phase 3)
+│   ├── app/
+│   │   ├── __init__.py          # Inference package initialization
+│   │   ├── config.py            # Path resolution & settings
+│   │   ├── schemas.py           # Pydantic v2 request/response schemas
+│   │   ├── predictor.py         # Model loading & inference manager
+│   │   └── main.py              # FastAPI application & endpoints
 │   ├── artifacts/
 │   │   ├── model.joblib         # Fitted Pipeline artifact (untracked by Git)
 │   │   └── metadata.json        # Model architecture & evaluation metadata
-│   ├── config/                  # Planned runtime configuration (Phase 3)
-│   └── main.py                  # Planned FastAPI entry point (Phase 3)
+│   ├── requirements.txt         # Inference service dependencies
+│   ├── main.py                  # CLI startup entry point
+│   └── README.md                # Inference documentation & API guide
 ├── common/
 │   ├── constants.py             # Feature lists, random seed, unit conversions
 │   └── transformers.py          # PropertyFeatureTransformer (scikit-learn compatible)
@@ -44,7 +48,8 @@ ml/
 │   ├── conftest.py              # Pytest environment & path setup
 │   ├── test_preprocessing.py    # Unit tests for sqft & bhk parsing, imputations
 │   ├── test_training.py         # Unit tests for pipeline shapes & reproducibility
-│   └── test_predictor.py        # Unit tests for artifact loading & predictions
+│   ├── test_predictor.py        # Unit tests for artifact loading & predictions
+│   └── test_inference_api.py    # Automated integration tests for FastAPI service
 ├── requirements.txt             # ML shared dependencies
 └── README.md
 ```
@@ -69,4 +74,4 @@ From project root:
 ```powershell
 pytest ml/tests/ -v
 ```
-All 14 unit tests pass cleanly (100% green).
+All 37 unit and integration tests pass cleanly (100% green).
