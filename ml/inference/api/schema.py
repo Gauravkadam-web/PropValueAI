@@ -9,8 +9,7 @@ import math
 from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel, Field, field_validator, model_validator
 
-
-from ml.common.transformers import parse_sqft_value
+from ml.common.utils import parse_sqft_value
 
 
 class PropertyPredictRequest(BaseModel):
@@ -174,7 +173,7 @@ class PropertyPredictResponse(BaseModel):
     )
     predicted_price: float = Field(
         ...,
-        description="Estimated property price.",
+        description="Estimated property price in Lakhs INR.",
     )
     target_unit: str = Field(
         default="Lakhs INR",

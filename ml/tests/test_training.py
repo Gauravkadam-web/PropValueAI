@@ -10,7 +10,8 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 
 from ml.common.constants import RANDOM_SEED, TEST_SPLIT_RATIO
-from ml.training.scripts.train import build_pipeline, filter_training_outliers
+from ml.pipeline.pipeline import build_pipeline
+from ml.training.scripts.train import filter_training_outliers
 
 
 @pytest.fixture

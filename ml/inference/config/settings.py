@@ -10,12 +10,11 @@ import sys
 from pathlib import Path
 from dataclasses import dataclass
 
-
 # Determine project root and ml directories reliably
 CURRENT_FILE = Path(__file__).resolve()
-# ml/inference/app/config.py -> app (parent) -> inference (parent) -> ml (parent) -> project_root (parent)
-APP_DIR = CURRENT_FILE.parent
-INFERENCE_DIR = APP_DIR.parent
+# ml/inference/config/settings.py -> config (parent) -> inference (parent) -> ml (parent) -> project_root (parent)
+CONFIG_DIR = CURRENT_FILE.parent
+INFERENCE_DIR = CONFIG_DIR.parent
 ML_DIR = INFERENCE_DIR.parent
 PROJECT_ROOT = ML_DIR.parent
 

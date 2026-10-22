@@ -12,7 +12,7 @@ from ml.common.transformers import (
     parse_bhk_value,
     PropertyFeatureTransformer,
 )
-from ml.training.scripts.train import create_preprocessor, build_pipeline
+from ml.pipeline.pipeline import create_preprocessor, build_pipeline
 from sklearn.dummy import DummyRegressor
 
 

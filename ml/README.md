@@ -28,21 +28,32 @@ ml/
 │   │   └── plots/               # Generated EDA plots (untracked by Git)
 │   ├── requirements.txt         # Training dependencies
 │   └── README.md                # Training documentation
+├── pipeline/
+│   ├── __init__.py              # Pipeline package
+│   └── pipeline.py              # Reusable ColumnTransformer & Pipeline factory
 ├── inference/
-│   ├── app/
-│   │   ├── __init__.py          # Inference package initialization
-│   │   ├── config.py            # Path resolution & settings
-│   │   ├── schemas.py           # Pydantic v2 request/response schemas
-│   │   ├── predictor.py         # Model loading & inference manager
-│   │   └── main.py              # FastAPI application & endpoints
+│   ├── model/
+│   │   ├── loader.py            # Artifact loading & verification
+│   │   └── predictor.py         # Prediction engine with non-negative guarantee
+│   ├── preprocessing/
+│   │   └── preprocess.py        # Inference input DataFrame preparation
+│   ├── services/
+│   │   └── prediction_service.py # Business orchestration & disclaimer attachment
+│   ├── config/
+│   │   └── settings.py          # Configuration settings & environment overrides
+│   ├── api/
+│   │   ├── app.py               # FastAPI app factory & error handlers
+│   │   ├── routes.py            # Endpoint route definitions
+│   │   └── schema.py            # Pydantic v2 request/response schemas
 │   ├── artifacts/
-│   │   ├── model.joblib         # Fitted Pipeline artifact (untracked by Git)
-│   │   └── metadata.json        # Model architecture & evaluation metadata
+│   │   ├── model.joblib         # Fitted Pipeline artifact (Git-tracked)
+│   │   └── metadata.json        # Model architecture & evaluation metadata (Git-tracked)
 │   ├── requirements.txt         # Inference service dependencies
 │   ├── main.py                  # CLI startup entry point
 │   └── README.md                # Inference documentation & API guide
 ├── common/
 │   ├── constants.py             # Feature lists, random seed, unit conversions
+│   ├── utils.py                 # Parsing and numerical utility functions
 │   └── transformers.py          # PropertyFeatureTransformer (scikit-learn compatible)
 ├── tests/
 │   ├── conftest.py              # Pytest environment & path setup
@@ -94,7 +105,7 @@ If you only need to run the FastAPI inference service, you do **not** need to do
    ```
 5. **Start the FastAPI inference service:**
    ```powershell
-   uvicorn ml.inference.app.main:app --host 127.0.0.1 --port 8000 --reload
+   uvicorn ml.inference.main:app --host 127.0.0.1 --port 8000 --reload
    ```
 6. **Verify health & readiness:**
    ```powershell

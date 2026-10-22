@@ -64,7 +64,12 @@ Avoid duplicate preprocessing logic. `preprocess.py` and `pipeline.py` are optio
 
 ## 7. Security and configuration
 - Never hardcode passwords, tokens, API keys, database credentials, hostnames, or environment-specific secrets.
-- Use environment variables and documented example environment files with placeholder values only.
+- Never directly read, create, modify, or leak `.env` files or environment credentials. The AI agent must never access or touch real `.env` files.
+- Any environment variable updates, additions, or changes must be made ONLY in `.env.example` files using placeholder/dummy values. The user will create and manage their own real `.env` files manually.
+- Maintain separate, distinct environment templates for each tier:
+  - Root `.env.example` (for root / ML service configuration)
+  - `backend/.env.example` (for Spring Boot backend configuration)
+  - `frontend/.env.example` (for Next.js frontend configuration)
 - Never commit `.env` files containing secrets.
 - Implement authorization checks server-side; do not rely on frontend hiding controls.
 - Validate types, ranges, units, and unexpected inputs at service boundaries.
@@ -94,3 +99,6 @@ A task is done only when:
 3. Relevant checks/tests are actually run when applicable.
 4. Documentation reflects the real state, not intended future behavior.
 5. Results and known limitations are reported truthfully.
+
+## 12. User greeting and communication convention
+In every turn and communication, the agent must greet the project owner as **"Gaurav Bhai"** before displaying any update, answer, or message.

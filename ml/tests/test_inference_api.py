@@ -17,10 +17,10 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from ml.inference.app.main import app
-from ml.inference.app.predictor import (
+from ml.inference.api.app import app
+from ml.inference.model.loader import ModelNotReadyError
+from ml.inference.model.predictor import (
     ModelPredictor,
-    ModelNotReadyError,
     InferenceError,
     predictor,
 )
@@ -198,7 +198,7 @@ def test_rejects_zero_or_negative_sqft(client: TestClient):
 def test_rejects_nan_and_infinite_sqft(client: TestClient):
     """NaN or infinite numeric values must be rejected by Pydantic schema or API."""
     from pydantic import ValidationError
-    from ml.inference.app.schemas import PropertyPredictRequest
+    from ml.inference.api.schema import PropertyPredictRequest
 
     with pytest.raises(ValidationError):
         PropertyPredictRequest(total_sqft=float("nan"))

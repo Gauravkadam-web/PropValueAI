@@ -45,39 +45,10 @@ from ml.common.transformers import (
     parse_sqft_value,
     parse_bhk_value,
 )
-
-
-def create_preprocessor(scale_numeric: bool = False) -> ColumnTransformer:
-    """Creates a ColumnTransformer for numeric and categorical features."""
-    numeric_cols = ["total_sqft", "bhk", "bath", "balcony"]
-    categorical_cols = ["area_type"]
-
-    num_steps = [("imputer", SimpleImputer(strategy="median"))]
-    if scale_numeric:
-        num_steps.append(("scaler", StandardScaler()))
-    numeric_transformer = Pipeline(steps=num_steps)
-
-    categorical_transformer = Pipeline(steps=[
-        ("imputer", SimpleImputer(strategy="most_frequent")),
-        ("onehot", OneHotEncoder(handle_unknown="ignore", sparse_output=False)),
-    ])
-
-    return ColumnTransformer(
-        transformers=[
-            ("num", numeric_transformer, numeric_cols),
-            ("cat", categorical_transformer, categorical_cols),
-        ],
-        remainder="drop"
-    )
-
-
-def build_pipeline(regressor, scale_numeric: bool = False) -> Pipeline:
-    """Builds a complete end-to-end Pipeline from raw inputs to prediction."""
-    return Pipeline(steps=[
-        ("feature_transformer", PropertyFeatureTransformer()),
-        ("preprocessor", create_preprocessor(scale_numeric=scale_numeric)),
-        ("regressor", regressor),
-    ])
+from ml.pipeline.pipeline import (
+    create_preprocessor,
+    build_pipeline,
+)
 
 
 def filter_training_outliers(train_df: pd.DataFrame) -> pd.DataFrame:

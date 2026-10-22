@@ -26,20 +26,23 @@ The PropValueAI Inference Service is a high-performance, standalone FastAPI serv
 
 ```text
 ml/inference/
-├── app/
-│   ├── __init__.py          # Package declaration
-│   ├── config.py            # Environment-driven settings & CWD-independent path resolution
-│   ├── schemas.py           # Pydantic v2 request/response schemas & data validation
-│   ├── predictor.py         # Model loading, validation, and inference manager
-│   └── main.py              # FastAPI app, lifespan manager, and API endpoints
+├── model/
+│   ├── loader.py            # Artifact deserialization & verification
+│   └── predictor.py         # Prediction engine with non-negative guarantee
+├── preprocessing/
+│   └── preprocess.py        # Inference input DataFrame preparation
+├── services/
+│   └── prediction_service.py # Business orchestration & disclaimer attachment
+├── config/
+│   └── settings.py          # Environment-driven settings & CWD-independent path resolution
+├── api/
+│   ├── app.py               # FastAPI application factory & error handlers
+│   ├── routes.py            # Route endpoint definitions
+│   └── schema.py            # Pydantic v2 request/response schemas & data validation
 ├── artifacts/
-│   ├── model.joblib         # Fitted Pipeline artifact (untracked by Git)
-│   ├── metadata.json        # Architectural metadata & evaluation metrics
+│   ├── model.joblib         # Fitted Pipeline artifact (Git-tracked)
+│   ├── metadata.json        # Architectural metadata & evaluation metrics (Git-tracked)
 │   └── .gitkeep
-├── config/                  # Legacy/structure preservation
-├── model/                   # Legacy/structure preservation
-├── preprocessing/           # Legacy/structure preservation
-├── services/                # Legacy/structure preservation
 ├── requirements.txt         # Inference service dependencies
 ├── main.py                  # CLI startup entry point
 └── README.md                # This documentation
@@ -193,7 +196,7 @@ pip install -r ml/inference/requirements.txt
 ### 3. Start the FastAPI Service
 ```powershell
 # Option A: via Uvicorn
-uvicorn ml.inference.app.main:app --host 127.0.0.1 --port 8000 --reload
+uvicorn ml.inference.main:app --host 127.0.0.1 --port 8000 --reload
 
 # Option B: via main.py entry point
 python ml/inference/main.py
