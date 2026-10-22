@@ -1,2 +1,7 @@
-# ML training dependencies placeholder
-# Dependencies will be defined and pinned with tested versions during the relevant implementation phase.
+# Phase 1 & 2: ML Training, Preprocessing, and Evaluation Dependencies
+pandas>=2.2.0
+numpy>=1.26.0
+scikit-learn>=1.4.0
+joblib>=1.3.0
+matplotlib>=3.8.0
+pytest>=8.0.0

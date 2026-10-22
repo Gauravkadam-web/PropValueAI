@@ -1,70 +1,72 @@
 # ML Module
 
-**Status:** Planned; training and inference implementation has not started.
+**Status:** Phase 2 complete. Offline EDA, preprocessing pipeline, model training, cross-validation, and pipeline artifact export are complete. Inference service (Phase 3) is pending.
 
 ## Responsibilities
 - `training/`: offline dataset inspection, EDA, training, evaluation, and experiment records.
-- `inference/`: loading the trusted fitted pipeline and serving predictions through FastAPI.
-- `pipeline/`: optional orchestration only when it removes duplication or improves maintenance.
-- `common/`: genuinely shared utilities/constants.
-- `tests/`: unit and integration tests for training, preprocessing, artifact loading, and predictions.
+- `inference/`: holds exported artifacts (`model.joblib`, `metadata.json`); Phase 3 will implement FastAPI inference.
+- `pipeline/`: optional orchestration modules if needed in future phases.
+- `common/`: shared utilities, unit conversion factors, constants, and custom scikit-learn transformers.
+- `tests/`: unit and integration tests for preprocessing, training reproducibility, and artifact loading.
 
-## Agreed structure
+## Current Repository Structure
 
 ```text
 ml/
 ├── training/
 │   ├── data/
-│   │   ├── raw/
-│   │   ├── processed/
-│   │   └── external/
+│   │   ├── raw/                 # Pune_House_Data.csv (untracked by Git)
+│   │   ├── processed/           # Processed datasets (untracked by Git)
+│   │   ├── external/            # External references
+│   │   └── README.md            # Data storage & provenance rules
 │   ├── scripts/
-│   │   ├── train.py                 # planned
-│   │   ├── evaluate.py              # planned
-│   │   └── generate_data.py         # optional; test/demo data only
+│   │   ├── inspect_dataset.py   # Dataset profiling utility
+│   │   ├── eda.py               # Exploratory data analysis & plot generator
+│   │   ├── train.py             # 5-fold CV & model training pipeline
+│   │   └── evaluate.py          # Standalone artifact evaluation utility
 │   ├── experiments/
-│   └── requirements.txt
+│   │   └── plots/               # Generated EDA plots (untracked by Git)
+│   ├── requirements.txt         # Training dependencies
+│   └── README.md                # Training documentation
 ├── inference/
-│   ├── model/
-│   │   ├── loader.py                # planned
-│   │   └── predictor.py             # planned
-│   ├── preprocessing/
-│   │   └── preprocess.py            # optional if not already in fitted pipeline
-│   ├── services/
-│   │   └── prediction_service.py    # planned
+│   ├── model/                   # Planned inference loaders/predictors (Phase 3)
+│   ├── preprocessing/           # Planned inference preprocessing (Phase 3)
+│   ├── services/                # Planned prediction service (Phase 3)
 │   ├── artifacts/
-│   │   ├── model.joblib             # generated after training; not committed by default
-│   │   └── metadata.json            # generated after training
-│   ├── config/
-│   │   └── settings.py              # planned
-│   └── main.py                      # planned FastAPI entry point
-├── pipeline/
-│   └── pipeline.py                  # optional orchestration
+│   │   ├── model.joblib         # Fitted Pipeline artifact (untracked by Git)
+│   │   └── metadata.json        # Model architecture & evaluation metadata
+│   ├── config/                  # Planned runtime configuration (Phase 3)
+│   └── main.py                  # Planned FastAPI entry point (Phase 3)
 ├── common/
-│   ├── utils.py
-│   └── constants.py
+│   ├── constants.py             # Feature lists, random seed, unit conversions
+│   └── transformers.py          # PropertyFeatureTransformer (scikit-learn compatible)
 ├── tests/
-│   ├── test_training.py
-│   ├── test_predictor.py
-│   └── test_preprocessing.py
-├── requirements.txt
+│   ├── conftest.py              # Pytest environment & path setup
+│   ├── test_preprocessing.py    # Unit tests for sqft & bhk parsing, imputations
+│   ├── test_training.py         # Unit tests for pipeline shapes & reproducibility
+│   └── test_predictor.py        # Unit tests for artifact loading & predictions
+├── requirements.txt             # ML shared dependencies
 └── README.md
 ```
 
-The agreed paths are preserved, but not every optional file must be implemented. Avoid empty abstractions and duplicate preprocessing.
+## Current Model Artifact & Performance
 
-## Training-to-inference lifecycle
-1. Inspect and approve a real dataset.
-2. Validate columns, target, currency, units, and data quality.
-3. Split data appropriately and fit preprocessing only on training data.
-4. Train a baseline and compare suitable models.
-5. Evaluate on held-out data with MAE, RMSE, and R².
-6. Save the fitted preprocessing + estimator pipeline as a trusted joblib artifact.
-7. Save metadata such as model version, data reference, feature schema, dependency versions, and evaluation metrics.
-8. Load the artifact for inference; do not retrain per request.
+- **Selected Model:** Random Forest Regressor (`sklearn.ensemble.RandomForestRegressor`)
+- **Fitted Pipeline:** Self-contained `PropertyFeatureTransformer` -> `ColumnTransformer` (median imputers, OneHotEncoder) -> `RandomForestRegressor`.
+- **5-Fold Cross-Validation Metrics (on 10,015 training observations):**
+  - **CV MAE:** 34.97 ± 2.61 Lakhs INR
+  - **CV RMSE:** 88.39 ± 8.67 Lakhs INR
+  - **CV $R^2$:** 0.6085 ± 0.0280
+- **Held-Out Test Set Performance (on 2,508 test observations):**
+  - **Test MAE:** 33.26 Lakhs INR
+  - **Test RMSE:** 88.74 Lakhs INR
+  - **Test $R^2$:** 0.6365
+- **Dataset Scope:** Educational demonstration based on CC0 benchmark data with mapped Pune localities. Predictions represent simulated estimates.
 
-## Dataset status
-Pune House Price and Indian Urban House Price candidates are not yet validated. See `../docs/development-roadmap.md`. Do not assume their schema or merge them before compatibility review.
+## Running Tests
 
-## Dependency management
-Training and inference dependency files may be separate. Pin tested versions during implementation and keep scikit-learn versions compatible with serialized artifacts. Do not install dependencies during Phase 0.
+From project root:
+```powershell
+pytest ml/tests/ -v
+```
+All 14 unit tests pass cleanly (100% green).
